@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+
+    <Properties>
+        <property name="LOG_DIR">logs</property>
+        <property name="pattern_file">%d{yyy-MM-dd HH:mm:ss} [%-16t] %-5level %logger{36} - %msg%n</property>
+        <property name="pattern_console">[%-16t] %-5level %logger{1} - %msg%n
+        </property>
+    </Properties>
+
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern_console}"/>
+        </Console>
+        <File name="Logger" fileName="${LOG_DIR}/logger.log" append="false">
+            <PatternLayout pattern="${pattern_file}"/>
+        </File>
+    </Appenders>
+    <Loggers>
+
+        <Logger name="epam.zlatamigas.multithreading" level="debug" additivity="true">
+            <AppenderRef ref="Logger"/>
+        </Logger>
+        <Root level="debug" additivity="true">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+</Configuration>

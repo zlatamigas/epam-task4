@@ -1,0 +1,8 @@
+1 false 20 10 UNLOAD 3
+2 true 18 2 LOAD 4
+3 true 30 29 UNLOAD_AND_LOAD 15 27
+4 true 60 29 UNLOAD_AND_LOAD 25 7
+5 false 20 10 UNLOAD 3
+6 true 18 2 LOAD 4
+7 true 8 2 LOAD 4
+8 true 20 17 LOAD 3
