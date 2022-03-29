@@ -1,11 +1,6 @@
 package epam.zlatamigas.multithreading.entity;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class Storage {
-
-    private static final Logger logger = LogManager.getLogger();
 
     private final int capacity;
     private int occupiedSize;
@@ -25,7 +20,6 @@ public class Storage {
 
     public void setOccupiedSize(int occupiedSize) {
         this.occupiedSize = occupiedSize;
-        logger.debug("Storage " + occupiedSize + "/" + capacity + " filled");
     }
 
     public int getAvailableSize() {
@@ -37,7 +31,6 @@ public class Storage {
         if (goodsCount > 0 && goodsCount <= getAvailableSize()) {
             occupiedSize += goodsCount;
             result = true;
-            logger.debug("Storage " + occupiedSize + "/" + capacity + " filled");
         }
         return result;
     }
@@ -47,7 +40,6 @@ public class Storage {
         if (goodsCount > 0 && goodsCount <= occupiedSize) {
             occupiedSize -= goodsCount;
             result = true;
-            logger.debug("Storage " + occupiedSize + "/" + capacity + " filled");
         }
         return result;
     }

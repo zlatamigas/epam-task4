@@ -131,11 +131,11 @@ public class LogisticBase {
     public void addToStorage(int goodsCount) throws LogisticBaseException {
 
         int goodsPortion;
-        int minFreeSize = (int)(STORAGE_CAPACITY * (1 - MAX_LOAD_FACTOR));
+        int minFreeSize = (int) (STORAGE_CAPACITY * (1 - MAX_LOAD_FACTOR));
 
         while (goodsCount > 0) {
 
-            goodsPortion = Math.min(minFreeSize , goodsCount);
+            goodsPortion = Math.min(minFreeSize, goodsCount);
             logger.debug("Wait to unload " + goodsPortion + "(of " + goodsCount + ") from truck");
 
             storageLock.lock();
@@ -164,7 +164,7 @@ public class LogisticBase {
     public void removeFromStorage(int goodsCount) throws LogisticBaseException {
 
         int goodsPortion;
-        int minOccupiedSize = (int)(STORAGE_CAPACITY * MIN_LOAD_FACTOR);
+        int minOccupiedSize = (int) (STORAGE_CAPACITY * MIN_LOAD_FACTOR);
 
         while (goodsCount > 0) {
 
@@ -221,7 +221,6 @@ public class LogisticBase {
         }
         LogisticBase that = (LogisticBase) o;
         return storage.equals(that.storage)
-                && storageManager.equals(that.storageManager)
                 && availableTerminals.equals(that.availableTerminals)
                 && occupiedTerminals.equals(that.occupiedTerminals);
     }
@@ -230,7 +229,6 @@ public class LogisticBase {
     public int hashCode() {
         int result = 1;
         result = 31 * result + storage.hashCode();
-        result = 31 * result + storageManager.hashCode();
         result = 31 * result + availableTerminals.hashCode();
         result = 31 * result + occupiedTerminals.hashCode();
         return result;
@@ -238,9 +236,8 @@ public class LogisticBase {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("LogisticBase{");
+        final StringBuilder sb = new StringBuilder("LogisticBase {");
         sb.append("storage=").append(storage);
-        sb.append(", storageManager=").append(storageManager);
         sb.append(", availableTerminals=").append(availableTerminals);
         sb.append(", occupiedTerminals=").append(occupiedTerminals);
         sb.append('}');

@@ -18,8 +18,9 @@
     </Appenders>
     <Loggers>
 
-        <Logger name="epam.zlatamigas.multithreading" level="debug" additivity="true">
+        <Logger name="epam.zlatamigas.multithreading" level="debug" additivity="false">
             <AppenderRef ref="Logger"/>
+            <AppenderRef ref="STDOUT" level="info"/>
         </Logger>
         <Root level="debug" additivity="true">
             <AppenderRef ref="STDOUT"/>

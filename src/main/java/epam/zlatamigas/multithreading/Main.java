@@ -1,5 +1,6 @@
 package epam.zlatamigas.multithreading;
 
+import epam.zlatamigas.multithreading.entity.LogisticBase;
 import epam.zlatamigas.multithreading.entity.Truck;
 import epam.zlatamigas.multithreading.exception.ReaderException;
 import epam.zlatamigas.multithreading.parser.TruckParser;
@@ -26,6 +27,8 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException {
 
+        logger.info("Main start");
+
         TruckReader reader = new TruckReaderImpl();
         TruckParser parser = new TruckParserImpl();
         List<String> truckStrs = null;
@@ -41,10 +44,10 @@ public class Main {
             }
         }
 
+        LogisticBase logisticBase = LogisticBase.getInstance();
+        logger.info(logisticBase);
+
         List<Truck> trucks = parser.parseTruckStrs(truckStrs);
-
-        logger.info("Main start");
-
         List<Future<Boolean>> executionResults = new ArrayList<>();
         ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL);
         for (var tr : trucks) {
@@ -63,6 +66,8 @@ public class Main {
         } catch (ExecutionException e) {
             logger.error("Error while running truck " + i + ": " + e.getMessage());
         }
+
+        logger.info(logisticBase);
 
         logger.info("Main finished");
     }
