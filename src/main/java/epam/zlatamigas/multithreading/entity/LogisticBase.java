@@ -135,7 +135,7 @@ public class LogisticBase {
         storageLock.lock();
         try {
             while (storage.getAvailableSize() < goodsCount
-                    || storage.getOccupiedSize() + goodsCount > storage.getCapacity()) {
+                    || storage.getOccupiedSize() + goodsCount > STORAGE_CAPACITY) {
                 logger.debug("Wait to unload truck");
                 notFullStorageCondition.await();
             }
@@ -154,18 +154,18 @@ public class LogisticBase {
 
     public void addToStorageByPortions(int goodsCount) throws LogisticBaseException {
 
-        int storageCapacity = storage.getCapacity();
         int goodsPortion;
+        int minFreeSize = (int)(STORAGE_CAPACITY * (1 - MAX_LOAD_FACTOR));
 
         while (goodsCount > 0) {
 
-            goodsPortion = random.nextInt(Math.min(storageCapacity, goodsCount)) + 1;
+            goodsPortion = Math.min(minFreeSize , goodsCount);
             logger.debug("Wait to unload " + goodsPortion + "(of " + goodsCount + ") from truck");
 
             storageLock.lock();
             try {
                 while (storage.getAvailableSize() < goodsPortion
-                        || storage.getOccupiedSize() + goodsPortion > storageCapacity) {
+                        || storage.getOccupiedSize() + goodsPortion > STORAGE_CAPACITY) {
                     logger.debug("Wait to unload truck");
                     notFullStorageCondition.await();
                 }
@@ -210,12 +210,12 @@ public class LogisticBase {
 
     public void removeFromStorageByPortions(int goodsCount) throws LogisticBaseException {
 
-        int storageCapacity = storage.getCapacity();
         int goodsPortion;
+        int minOccupiedSize = (int)(STORAGE_CAPACITY * MIN_LOAD_FACTOR);
 
         while (goodsCount > 0) {
 
-            goodsPortion = random.nextInt(Math.min(storageCapacity, goodsCount)) + 1;
+            goodsPortion = Math.min(minOccupiedSize, goodsCount);
             logger.debug("Wait to load " + goodsPortion + "(of " + goodsCount + ") to truck");
 
             storageLock.lock();
@@ -243,14 +243,14 @@ public class LogisticBase {
     public void manageStorage() {
         storageLock.lock();
         try {
-            logger.debug("Logistic base storage filled " + storage.getOccupiedSize() + "/" + storage.getCapacity());
+            logger.debug("Logistic base storage filled " + storage.getOccupiedSize() + "/" + STORAGE_CAPACITY);
             if (storage.getOccupiedSize() < STORAGE_CAPACITY * MIN_LOAD_FACTOR) {
                 storage.setOccupiedSize((int) (STORAGE_CAPACITY * MIN_LOAD_FACTOR));
-                logger.debug("Logistic base managed storage MIN filled " + storage.getOccupiedSize() + "/" + storage.getCapacity());
+                logger.debug("Logistic base managed storage MIN filled " + storage.getOccupiedSize() + "/" + STORAGE_CAPACITY);
                 notEmptyStorageCondition.signalAll();
             } else if (storage.getOccupiedSize() > STORAGE_CAPACITY * MAX_LOAD_FACTOR) {
                 storage.setOccupiedSize((int) (STORAGE_CAPACITY * MAX_LOAD_FACTOR));
-                logger.debug("Logistic base managed storage MAX filled " + storage.getOccupiedSize() + "/" + storage.getCapacity());
+                logger.debug("Logistic base managed storage MAX filled " + storage.getOccupiedSize() + "/" + STORAGE_CAPACITY);
                 notFullStorageCondition.signalAll();
             }
         } finally {
