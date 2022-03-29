@@ -79,7 +79,7 @@ public class LogisticBase {
     }
 
     public Terminal obtainTerminal(boolean isPrioritized) throws LogisticBaseException {
-        Terminal terminal = null;
+        Terminal terminal;
         if (isPrioritized) {
             prioritizedWaiting.incrementAndGet();
         }
@@ -130,30 +130,6 @@ public class LogisticBase {
 
     public void addToStorage(int goodsCount) throws LogisticBaseException {
 
-        logger.debug("Wait to unload " + goodsCount + " from truck");
-
-        storageLock.lock();
-        try {
-            while (storage.getAvailableSize() < goodsCount
-                    || storage.getOccupiedSize() + goodsCount > STORAGE_CAPACITY) {
-                logger.debug("Wait to unload truck");
-                notFullStorageCondition.await();
-            }
-            storage.addGoods(goodsCount);
-            TimeUnit.MILLISECONDS.sleep(random.nextInt(STORAGE_OPERATION_TIME_INTERVAL));
-            notEmptyStorageCondition.signalAll();
-        } catch (InterruptedException e) {
-            logger.debug("Error unloading truck: " + e.getMessage());
-            throw new LogisticBaseException("Error unloading truck", e);
-        } finally {
-            storageLock.unlock();
-        }
-
-        logger.debug("Finished unloading truck");
-    }
-
-    public void addToStorageByPortions(int goodsCount) throws LogisticBaseException {
-
         int goodsPortion;
         int minFreeSize = (int)(STORAGE_CAPACITY * (1 - MAX_LOAD_FACTOR));
 
@@ -186,29 +162,6 @@ public class LogisticBase {
     }
 
     public void removeFromStorage(int goodsCount) throws LogisticBaseException {
-
-        logger.debug("Wait to load " + goodsCount + " to truck");
-
-        storageLock.lock();
-        try {
-            while (storage.getOccupiedSize() < goodsCount) {
-                logger.debug("Wait to load truck");
-                notEmptyStorageCondition.await();
-            }
-            storage.removeGoods(goodsCount);
-            TimeUnit.MILLISECONDS.sleep(random.nextInt(STORAGE_OPERATION_TIME_INTERVAL));
-            notFullStorageCondition.signalAll();
-        } catch (InterruptedException e) {
-            logger.debug("Error loading truck: " + e.getMessage(), e.getCause());
-            throw new LogisticBaseException("Error loading truck", e);
-        } finally {
-            storageLock.unlock();
-        }
-
-        logger.debug("Finished loading truck");
-    }
-
-    public void removeFromStorageByPortions(int goodsCount) throws LogisticBaseException {
 
         int goodsPortion;
         int minOccupiedSize = (int)(STORAGE_CAPACITY * MIN_LOAD_FACTOR);

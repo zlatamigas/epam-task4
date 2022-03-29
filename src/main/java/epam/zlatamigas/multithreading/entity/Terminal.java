@@ -25,7 +25,7 @@ public class Terminal {
     public void loadTruck(Truck truck) throws LogisticBaseException {
         int cargo = truck.getTruckTask().getLoadCount();
         try {
-            LogisticBase.getInstance().removeFromStorageByPortions(cargo);
+            LogisticBase.getInstance().removeFromStorage(cargo);
         } catch (LogisticBaseException e) {
             throw new LogisticBaseException("Cannot load truck " + truck.getId() + " at terminal " + id, e);
         }
@@ -35,7 +35,7 @@ public class Terminal {
     public void unloadTruck(Truck truck) throws LogisticBaseException {
         int cargo = truck.getTruckTask().getUnloadCount();
         try {
-            LogisticBase.getInstance().addToStorageByPortions(cargo);
+            LogisticBase.getInstance().addToStorage(cargo);
         } catch (LogisticBaseException e) {
             throw new LogisticBaseException("Cannot unload truck " + truck.getId() + " at terminal " + id, e);
         }
